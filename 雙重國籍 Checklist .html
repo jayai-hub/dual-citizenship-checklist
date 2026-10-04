@@ -1,0 +1,584 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>이중국적 체크리스트</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+KR:wght@600;700&family=Noto+Serif+TC:wght@600;700&display=swap">
+<style>
+/* Layout: a paper-form checklist in one column. Each stage sits beside a large age number in the left margin, ordered by the age at which the step applies. */
+:root{
+  --bg:#f2f5f9;
+  --surface:#ffffff;
+  --fg:#14202e;
+  --muted:#58667a;
+  --line:#d3dbe6;
+  --accent:#1f4e8c;
+  --accent-soft:#e3ecf8;
+  --on-accent:#ffffff;
+  --warn:#a4361f;
+  --warn-soft:#fbe8e3;
+  --caution:#7d5200;
+  --caution-soft:#fbf0d7;
+  --f-sans:'Noto Sans KR','Noto Sans TC',-apple-system,'Apple SD Gothic Neo','PingFang TC','Microsoft JhengHei',sans-serif;
+  --f-serif:'Noto Serif KR','Noto Serif TC','Apple Myungjo','Songti TC',serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0e1621;
+    --surface:#162131;
+    --fg:#e5ebf3;
+    --muted:#9aa8ba;
+    --line:#2a3748;
+    --accent:#86b5ef;
+    --accent-soft:#1c2d46;
+    --on-accent:#0e1621;
+    --warn:#f0917b;
+    --warn-soft:#3b211c;
+    --caution:#e8c36d;
+    --caution-soft:#352c14;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0e1621;
+  --surface:#162131;
+  --fg:#e5ebf3;
+  --muted:#9aa8ba;
+  --line:#2a3748;
+  --accent:#86b5ef;
+  --accent-soft:#1c2d46;
+  --on-accent:#0e1621;
+  --warn:#f0917b;
+  --warn-soft:#3b211c;
+  --caution:#e8c36d;
+  --caution-soft:#352c14;
+  color-scheme:dark;
+}
+html[lang="zh-Hant"]{
+  --f-sans:'Noto Sans TC','Noto Sans KR',-apple-system,'PingFang TC','Microsoft JhengHei',sans-serif;
+  --f-serif:'Noto Serif TC','Noto Serif KR','Songti TC',serif;
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--bg);
+  color:var(--fg);
+  font-family:var(--f-sans);
+  font-size:16px;
+  line-height:1.65;
+  padding-inline:16px;
+  padding-block:0 3rem;
+}
+.page{max-width:46rem;margin-inline:auto}
+
+/* sticky control bar */
+.top{
+  position:sticky;
+  top:env(safe-area-inset-top,0px);
+  z-index:10;
+  background:var(--bg);
+  margin-inline:-16px;
+  padding:.65rem 16px .6rem;
+  border-bottom:1px solid var(--line);
+}
+.ctl{display:flex;flex-wrap:wrap;gap:.5rem .75rem;align-items:center;justify-content:space-between}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--surface)}
+.seg button{
+  font:inherit;font-size:.95rem;font-weight:500;
+  min-height:40px;padding:.3rem 1rem;
+  border:0;background:transparent;color:var(--fg);cursor:pointer;
+}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--on-accent);font-weight:700}
+.seg button:focus-visible{outline:2px solid var(--accent);outline-offset:-3px}
+.prog{display:flex;align-items:center;gap:.75rem;margin-top:.6rem;font-size:.85rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.bar{flex:1;height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:3px}
+@media (prefers-reduced-motion:no-preference){.bar i{transition:width .25s ease}}
+
+/* heading */
+h1{
+  font-family:var(--f-serif);
+  font-weight:700;
+  font-size:clamp(1.6rem,6vw,2.25rem);
+  line-height:1.25;
+  text-wrap:balance;
+  margin:1.6rem 0 .5rem;
+}
+.lead{margin:0 0 1.4rem;color:var(--muted);max-width:38rem}
+
+/* stages */
+.stage{
+  display:grid;
+  grid-template-columns:5.75rem minmax(0,1fr);
+  column-gap:1rem;
+  padding-block:1.4rem;
+  border-top:1px solid var(--line);
+}
+.age{display:flex;flex-direction:column;align-items:flex-start;line-height:1}
+.big{font-family:var(--f-serif);font-weight:700;font-size:2.4rem;color:var(--accent);font-variant-numeric:tabular-nums}
+.big.long{font-size:1.65rem;padding-top:.45rem}
+.unit{font-size:.82rem;color:var(--muted);margin-top:.4rem}
+.stage-body{min-width:0}
+.stage h2{font-size:1.05rem;font-weight:700;margin:0 0 .4rem;line-height:1.4;text-wrap:balance}
+
+.items{list-style:none;margin:0;padding:0;display:grid;gap:.15rem}
+.row{
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr);
+  gap:.75rem;
+  align-items:start;
+  padding:.65rem .6rem;
+  border-radius:8px;
+  cursor:pointer;
+}
+.row:hover{background:var(--surface)}
+.row input{width:1.3rem;height:1.3rem;margin:.18rem 0 0;accent-color:var(--accent);cursor:pointer}
+.row input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.row.done .txt{color:var(--muted)}
+.txt{min-width:0;overflow-wrap:anywhere}
+.tag{
+  display:inline-block;
+  font-size:.72rem;font-weight:700;letter-spacing:.04em;line-height:1.5;
+  padding:0 .45rem;border-radius:4px;margin-right:.45rem;
+  vertical-align:.1em;
+}
+.tag.deadline{background:var(--warn-soft);color:var(--warn)}
+.tag.caution{background:var(--caution-soft);color:var(--caution)}
+.note{display:block;margin-top:.15rem;font-size:.88rem;color:var(--muted)}
+.dt{display:block;margin-top:.2rem;font-size:.9rem;font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums}
+.when{margin:0 0 .35rem;font-size:.88rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.birth{
+  display:inline-block;margin:0 0 .7rem;padding:.15rem .75rem;border-radius:999px;
+  background:var(--accent-soft);color:var(--accent);
+  font-size:.88rem;font-weight:700;font-variant-numeric:tabular-nums;
+}
+.links{display:flex;flex-wrap:wrap;gap:.25rem .9rem;margin-top:.35rem;font-size:.9rem}
+.links a{color:var(--accent);text-underline-offset:.2em}
+.links a:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
+
+.org{display:grid;gap:.05rem;padding:.6rem .6rem}
+.org strong{font-weight:700}
+.org span{color:var(--muted);font-size:.9rem}
+.org a{color:var(--accent);font-size:.9rem;text-underline-offset:.2em;overflow-wrap:anywhere}
+
+.foot{border-top:1px solid var(--line);padding-block:1.2rem 0;color:var(--muted);font-size:.9rem}
+.foot p{margin:0 0 1rem;max-width:38rem}
+.btn{
+  font:inherit;font-size:.9rem;
+  min-height:40px;padding:.4rem 1rem;
+  border:1px solid var(--line);background:var(--surface);color:var(--fg);
+  border-radius:8px;cursor:pointer;
+}
+.btn.confirm{border-color:var(--warn);color:var(--warn)}
+.btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+@media (max-width:560px){
+  .stage{grid-template-columns:minmax(0,1fr)}
+  .age{flex-direction:row;align-items:baseline;gap:.4rem;margin-bottom:.35rem}
+  .unit{margin-top:0}
+  .big.long{padding-top:0}
+}
+</style>
+
+<div class="page">
+  <header class="top" id="top">
+    <div class="ctl">
+      <div class="seg" id="segVer" role="group"></div>
+      <div class="seg" id="segLang" role="group" aria-label="언어 / 語言"></div>
+    </div>
+    <div class="prog" id="prog"></div>
+  </header>
+  <main>
+    <h1 id="h1"></h1>
+    <p class="birth" id="birth"></p>
+    <p class="lead" id="lead"></p>
+    <div id="list"></div>
+  </main>
+  <footer class="foot" id="foot"></footer>
+</div>
+
+<script>
+(function () {
+  var KEY = 'dn-checklist-v1';
+  var st = { lang: 0, ver: 'm', c: {} };
+  try {
+    var raw = localStorage.getItem(KEY);
+    if (raw) {
+      var p = JSON.parse(raw);
+      if (p && typeof p === 'object') {
+        st.lang = p.lang === 1 ? 1 : 0;
+        st.ver = p.ver === 'f' ? 'f' : 'm';
+        st.c = p.c && typeof p.c === 'object' ? p.c : {};
+      }
+    }
+  } catch (e) {}
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} }
+
+  var U = {
+    h1: ['이중국적 체크리스트', '雙重國籍檢查清單'],
+    lead: [
+      '한국·대만 이중국적. 만 17세에 주민등록증을 신청할 때 한꺼번에 처리하는 것이 가장 좋습니다.',
+      '韓國・台灣雙重國籍。滿17歲辦理韓國身分證時一併處理最好。'
+    ],
+    ver: [['남자', '여자'], ['男生', '女生']],
+    birth: {
+      m: ['2010년 6월 16일생 (民國 99/6/16)', '2010年6月16日生（民國99/6/16）'],
+      f: ['2012년 9월 16일생 (民國 101/9/16)', '2012年9月16日生（民國101/9/16）']
+    },
+    verLabel: ['버전 선택', '選擇版本'],
+    done: ['완료', '完成'],
+    orgTitle: ['관련 기관', '相關機關'],
+    orgBig: ['기관', '機關'],
+    tagDeadline: ['기한', '期限'],
+    tagCaution: ['주의', '注意'],
+    reset: ['이 버전 체크 초기화', '清除此版本的勾選'],
+    resetConfirm: ['한 번 더 누르면 초기화됩니다', '再按一次即清除'],
+    foot: [
+      '직접 정리한 메모를 기준으로 만들었습니다. 신청하기 전에 해당 기관에서 최신 조건을 꼭 확인하세요.',
+      '本清單依個人筆記整理。申請前請務必向各機關確認最新規定。'
+    ]
+  };
+
+  var HIKOREA = 'https://www.hikorea.go.kr/Main.pt';
+  var G4K = 'https://www.g4k.go.kr/ciph/0800/selectCIPH0801D.do';
+
+  var STAGES = [
+    {
+      big: '17', unit: ['세', '歲'],
+      title: ['주민등록증 신청 · 국적 결정', '辦理身分證 · 決定國籍'],
+      when: {
+        m: ['2027년 6월 16일 만 17세', '2027年6月16日 滿17歲'],
+        f: ['2029년 9월 16일 만 17세', '2029年9月16日 滿17歲']
+      },
+      items: [
+        { id: 'a1', v: 'all',
+          t: ['만 17세가 되는 달의 다음 달 1일부터 1년 안에 주민등록증을 신청한다',
+              '滿17歲的下個月1號起，1年內可申請韓國身分證'],
+          d: {
+            m: ['2027년 7월 1일 ~ 2028년 6월 30일', '2027年7月1日～2028年6月30日'],
+            f: ['2029년 10월 1일 ~ 2030년 9월 30일', '2029年10月1日～2030年9月30日']
+          } },
+        { id: 'a2', v: 'all',
+          t: ['이중국적을 유지할지 정한다. 주민등록증을 신청할 때 함께 처리하는 것이 가장 좋다',
+              '決定是否維持雙重國籍，建議辦身分證時一併處理'] },
+        { id: 'a3', v: 'all',
+          t: ['유지하는 경우: 한국 안에서 외국인 신분 관련 조항을 사용하지 않겠다는 서약(외국국적불행사 서약)에 서명하고 신청한다',
+              '維持的話：簽署（在韓國境內）不使用外國人身分相關條款的聲明（외국국적불행사 서약）並提出申請'] },
+        { id: 'a4', v: 'all',
+          t: ['유지하지 않는 경우: 한국 국적 이탈을 신청한다 (병역 없음, 단일 국적)',
+              '不維持的話：申請脫離韓國國籍（無兵役、單一國籍）'] },
+        { id: 'a5', v: 'all',
+          t: ['하이코리아(Hikorea)에서 방문 예약을 한 뒤에 방문한다',
+              '先在 Hikorea 預約後再前往'],
+          links: [
+            { l: ['하이코리아', 'Hikorea'], h: HIKOREA },
+            { l: ['방문 예약 페이지', '預約頁面'], h: G4K }
+          ] }
+      ]
+    },
+    {
+      big: '18', unit: ['세', '歲'],
+      title: ['병역 의무 시작', '兵役義務開始'],
+      when: {
+        m: ['2028년 (만 18세가 되는 해, 생일은 6월 16일)', '2028年（滿18歲的那一年，生日6月16日）']
+      },
+      items: [
+        { id: 'b1', v: 'm',
+          t: ['만 18세부터 병역 의무가 생긴다는 점을 확인한다',
+              '確認：滿18歲起開始有兵役義務'] },
+        { id: 'b2', v: 'm', tag: 'deadline',
+          t: ['만 18세가 되는 해의 3월 31일 전에 서약을 처리한다 (권장)',
+              '建議在滿18歲的3月31日前處理聲明'],
+          d: { m: ['2028년 3월 31일 전', '2028年3月31日前'] } },
+        { id: 'b3', v: 'm',
+          t: ['필요한 서류는 참고 글에서 확인해 준비한다',
+              '所需資料請參考以下文章準備'],
+          links: [
+            { l: ['참고 글 1', '參考文章 1'], h: 'https://blog.naver.com/unwrittenpath/223801070425' },
+            { l: ['참고 글 2', '參考文章 2'], h: 'https://blog.naver.com/unwrittenpath/224095432970' },
+            { l: ['참고 글 3', '參考文章 3'], h: 'https://blog.naver.com/unwrittenpath/224093508953' },
+            { l: ['참고 글 4', '參考文章 4'], h: 'https://blog.naver.com/kaylachoe/223519826953' }
+          ] }
+      ]
+    },
+    {
+      big: '22', unit: ['세 전', '歲前'],
+      title: ['이중국적 서약 기한', '雙重國籍聲明期限'],
+      when: {
+        m: ['2032년 6월 16일 만 22세', '2032年6月16日 滿22歲'],
+        f: ['2034년 9월 16일 만 22세', '2034年9月16日 滿22歲']
+      },
+      items: [
+        { id: 'c1', v: 'all', tag: 'deadline',
+          t: ['만 22세가 되기 전에 서약에 서명하고 신청한다 (남녀 모두)',
+              '滿22歲前簽署聲明並申請（男女都要）'],
+          d: {
+            m: ['2032년 6월 16일 전', '2032年6月16日前'],
+            f: ['2034년 9월 16일 전', '2034年9月16日前']
+          } },
+        { id: 'c2', v: 'all', tag: 'caution',
+          t: ['22세가 넘으면 하나만 선택해야 하고, 이중국적을 유지할 수 없다',
+              '超過22歲就只能選一個，無法維持雙重國籍'] },
+        { id: 'c3', v: 'f',
+          t: ['서약을 마친 뒤에는 한국 취업을 포함한 모든 생활을 한국인 신분으로 한다',
+              '完成聲明後，在韓國工作等任何生活都以韓國人身分進行'],
+          n: ['한국인의 권리와 의무를 갖는다', '享有韓國人的權利與義務'] }
+      ]
+    },
+    {
+      big: '24', unit: ['세 ~ 25세', '歲～25歲'],
+      title: ['국외여행허가서', '國外旅遊許可書'],
+      when: {
+        m: ['2034년 1월 1일 ~ 2035년 1월 15일', '2034年1月1日～2035年1月15日']
+      },
+      items: [
+        { id: 'd1', v: 'm',
+          t: ['24세 전에는 한국을 자유롭게 출입국할 수 있다',
+              '24歲前可以自由進出韓國'],
+          d: { m: ['2033년 12월 31일까지', '到2033年12月31日'] } },
+        { id: 'd2', v: 'm', tag: 'deadline',
+          t: ['24세 1월 1일 ~ 25세 1월 15일 사이에 “국외여행허가서”를 신청한다',
+              '在24歲1/1～25歲1/15之間申請「國外旅遊許可書」'],
+          d: { m: ['2034년 1월 1일 ~ 2035년 1월 15일', '2034年1月1日～2035年1月15日'] } },
+        { id: 'd3', v: 'm',
+          t: ['이중국적·병역 미필 상태로 37세까지 한국을 출입국할 수 있다',
+              '維持雙重國籍、未服兵役的狀態下，可進出韓國到37歲'],
+          d: { m: ['2047년까지', '到2047年'] } },
+        { id: 'd4', v: 'm',
+          t: ['한국에서 대학·대학원에 다니면 병역을 연기할 수 있다',
+              '若就讀韓國的大學、研究所，也可以延後兵役'] }
+      ]
+    },
+    {
+      big: '24–37', long: true, unit: ['세', '歲'],
+      title: ['한국 체류 · 수입 주의', '在韓國的停留與收入'],
+      when: {
+        m: ['2034년 ~ 2047년', '2034年～2047年']
+      },
+      items: [
+        { id: 'e1', v: 'm', tag: 'caution',
+          t: ['한국 거주 6개월 이상, 영리활동 60일 이상, 수입 1,000만 원 이상이면 병역을 해야 한다',
+              '在韓國居住6個月以上、營利活動60天以上，且收入達1000萬韓元以上的話，要當兵'],
+          n: ['1,000만 원은 대만 약 20만 NT$. 체류 일수와 수입을 늘 확인한다',
+              '1000萬韓元約台幣20萬。要隨時留意居留天數與收入'] },
+        { id: 'e2', v: 'm',
+          t: ['한국에서 취업할 계획이라면 일찍 군대에 가는 것을 권장한다. 그렇지 않으면 반년마다 출입국해야 한다',
+              '若想在韓國上班發展，建議提早當兵，不然要半年進出一次'] },
+        { id: 'e3', v: 'm',
+          t: ['해외에서 근무하며 한국으로 출장 가는 경우, 6개월마다 한국을 한 번 나온다',
+              '若在國外上班、出差到韓國，每6個月就要出韓國一趟'] }
+      ]
+    },
+    {
+      big: '37', unit: ['세 이후', '歲以後'],
+      title: ['모든 제한 해제', '所有限制解除'],
+      when: {
+        m: ['2047년 이후', '2047年以後']
+      },
+      items: [
+        { id: 'f1', v: 'm',
+          t: ['37세를 넘으면 병역 의무도, 국외여행허가서도 필요 없고 어떤 제한도 없다',
+              '超過37歲後，不用當兵、不需要「國外旅遊許可書」，沒有任何限制'],
+          d: { m: ['2047년 이후', '2047年以後'] } }
+      ]
+    },
+    {
+      big: ['상시', '隨時'], unit: ['', ''],
+      title: ['항상 기억할 것', '隨時留意'],
+      items: [
+        { id: 'g1', v: 'all', tag: 'caution',
+          t: ['대만 공항에서는 대만 여권, 한국 공항에서는 한국 여권을 사용한다',
+              '在台灣機場用台灣護照，在韓國機場用韓國護照'] },
+        { id: 'g2', v: 'all', tag: 'caution',
+          t: ['한국에서 대만 여권을 쓰면 대만 관광객 신분이 되어 체류가 30일로 제한된다',
+              '若在韓國使用台灣護照，只有台灣觀光客身分，居留限30天'] },
+        { id: 'g3', v: 'all',
+          t: ['이중국적을 유지하면 앞으로 한국의 건강보험, 연금 등의 자격이 생긴다',
+              '維持雙重國籍，日後在韓國的健保、年金等都有資格'] },
+        { id: 'g4', v: 'all',
+          t: ['나중에 자녀가 생기면 자녀도 한국 국적을 얻는다. 한국에 출생 등록을 하고 위와 같은 절차를 똑같이 처리한다',
+              '將來有孩子，一樣獲得韓國國籍。要在韓國登記出生，並同樣處理上面的國籍聲明（男生另加兵役）'] }
+      ]
+    }
+  ];
+
+  var ORGS = [
+    { v: 'all',
+      name: ['법무부 출입국·외국인정책본부', '法務部 出入國・外國人政策本部'],
+      role: ['국적선택신고', '國籍選擇申報'],
+      href: 'https://www.immigration.go.kr', host: 'immigration.go.kr' },
+    { v: 'all',
+      name: ['외교부 재외공관', '外交部 在外公館'],
+      role: ['해외출생신고, 한국 국적 이탈', '海外出生申報、脫離韓國國籍'],
+      href: 'https://www.mofa.go.kr', host: 'mofa.go.kr' },
+    { v: 'm',
+      name: ['병무청', '兵務廳'],
+      role: ['병역과 국적 관련 문의', '兵役相關國籍詢問'],
+      href: 'https://www.mma.go.kr', host: 'mma.go.kr' }
+  ];
+
+  function esc(s) {
+    return String(s).replace(/[&<>"]/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+    });
+  }
+  function T(a) { return a[st.lang]; }
+  function show(it) { return it.v === 'all' || it.v === st.ver; }
+  function key(it) { return st.ver + ':' + it.id; }
+
+  function updateProgress() {
+    var total = 0, done = 0;
+    STAGES.forEach(function (s) {
+      s.items.forEach(function (it) {
+        if (!show(it)) return;
+        total++;
+        if (st.c[key(it)]) done++;
+      });
+    });
+    var pct = total ? Math.round(done / total * 100) : 0;
+    document.getElementById('prog').innerHTML =
+      '<div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="' + total +
+      '" aria-valuenow="' + done + '"><i style="width:' + pct + '%"></i></div>' +
+      '<span>' + T(U.done) + ' ' + done + ' / ' + total + '</span>';
+  }
+
+  function renderList() {
+    var html = '';
+    STAGES.forEach(function (s) {
+      var items = s.items.filter(show);
+      if (!items.length) return;
+      var big = typeof s.big === 'string' ? s.big : T(s.big);
+      var unit = T(s.unit);
+      html += '<section class="stage"><div class="age"><span class="big' + (s.long ? ' long' : '') + '">' +
+        esc(big) + '</span>' + (unit ? '<span class="unit">' + esc(unit) + '</span>' : '') + '</div>' +
+        '<div class="stage-body"><h2>' + esc(T(s.title)) + '</h2>' +
+        (s.when && s.when[st.ver] ? '<p class="when">' + esc(T(s.when[st.ver])) + '</p>' : '') +
+        '<ul class="items">';
+      items.forEach(function (it) {
+        var id = 'c-' + st.ver + '-' + it.id;
+        var on = !!st.c[key(it)];
+        var tag = it.tag === 'deadline'
+          ? '<span class="tag deadline">' + esc(T(U.tagDeadline)) + '</span>'
+          : it.tag === 'caution'
+            ? '<span class="tag caution">' + esc(T(U.tagCaution)) + '</span>' : '';
+        var note = it.n ? '<span class="note">' + esc(T(it.n)) + '</span>' : '';
+        var dt = it.d && it.d[st.ver] ? '<span class="dt">' + esc(T(it.d[st.ver])) + '</span>' : '';
+        var links = '';
+        if (it.links) {
+          links = '<div class="links">' + it.links.map(function (k) {
+            return '<a href="' + esc(k.h) + '" target="_blank" rel="noopener noreferrer">' + esc(T(k.l)) + '</a>';
+          }).join('') + '</div>';
+        }
+        html += '<li><label class="row' + (on ? ' done' : '') + '" for="' + id + '">' +
+          '<input type="checkbox" id="' + id + '" data-k="' + esc(key(it)) + '"' + (on ? ' checked' : '') + '>' +
+          '<span class="txt">' + tag + esc(T(it.t)) + dt + note + links + '</span></label></li>';
+      });
+      html += '</ul></div></section>';
+    });
+
+    html += '<section class="stage"><div class="age"><span class="big">' + esc(T(U.orgBig)) +
+      '</span></div><div class="stage-body"><h2>' + esc(T(U.orgTitle)) + '</h2><div class="items">';
+    ORGS.filter(show).forEach(function (o) {
+      html += '<div class="org"><strong>' + esc(T(o.name)) + '</strong><span>' + esc(T(o.role)) +
+        '</span><a href="' + esc(o.href) + '" target="_blank" rel="noopener noreferrer">' + esc(o.host) + '</a></div>';
+    });
+    html += '</div></div></section>';
+
+    document.getElementById('list').innerHTML = html;
+  }
+
+  var resetTimer = null, resetArmed = false;
+  function renderFoot() {
+    document.getElementById('foot').innerHTML =
+      '<p>' + esc(T(U.foot)) + '</p>' +
+      '<button type="button" class="btn' + (resetArmed ? ' confirm' : '') + '" id="resetBtn">' +
+      esc(T(resetArmed ? U.resetConfirm : U.reset)) + '</button>';
+  }
+
+  function renderControls() {
+    document.documentElement.lang = st.lang ? 'zh-Hant' : 'ko';
+    var vb = document.querySelectorAll('#segVer button');
+    for (var i = 0; i < vb.length; i++) {
+      var b = vb[i];
+      b.textContent = U.ver[st.lang][b.dataset.ver === 'm' ? 0 : 1];
+      b.setAttribute('aria-pressed', String(b.dataset.ver === st.ver));
+    }
+    document.getElementById('segVer').setAttribute('aria-label', T(U.verLabel));
+    var lb = document.querySelectorAll('#segLang button');
+    for (var j = 0; j < lb.length; j++) {
+      lb[j].setAttribute('aria-pressed', String(Number(lb[j].dataset.lang) === st.lang));
+    }
+    document.getElementById('h1').textContent = T(U.h1);
+    document.getElementById('lead').textContent = T(U.lead);
+    document.getElementById('birth').textContent = T(U.birth[st.ver]);
+  }
+
+  function renderAll() {
+    renderControls();
+    renderList();
+    renderFoot();
+    updateProgress();
+  }
+
+  // build the toggle buttons once so focus stays on them after a click
+  var segVer = document.getElementById('segVer');
+  ['m', 'f'].forEach(function (v) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.dataset.ver = v;
+    segVer.appendChild(b);
+  });
+  var segLang = document.getElementById('segLang');
+  [['한국어', 0], ['繁體中文', 1]].forEach(function (x) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.dataset.lang = String(x[1]);
+    b.textContent = x[0];
+    segLang.appendChild(b);
+  });
+
+  document.getElementById('top').addEventListener('click', function (e) {
+    var b = e.target.closest('button');
+    if (!b) return;
+    if (b.dataset.ver) { st.ver = b.dataset.ver; }
+    else if (b.dataset.lang) { st.lang = Number(b.dataset.lang); }
+    else return;
+    resetArmed = false;
+    save();
+    renderAll();
+  });
+
+  document.getElementById('list').addEventListener('change', function (e) {
+    var cb = e.target;
+    if (!cb || cb.type !== 'checkbox') return;
+    var k = cb.dataset.k;
+    if (cb.checked) st.c[k] = 1; else delete st.c[k];
+    var row = cb.closest('.row');
+    if (row) row.classList.toggle('done', cb.checked);
+    save();
+    updateProgress();
+  });
+
+  document.getElementById('foot').addEventListener('click', function (e) {
+    if (!e.target.closest('#resetBtn')) return;
+    if (!resetArmed) {
+      resetArmed = true;
+      renderFoot();
+      clearTimeout(resetTimer);
+      resetTimer = setTimeout(function () { resetArmed = false; renderFoot(); }, 4000);
+      return;
+    }
+    clearTimeout(resetTimer);
+    resetArmed = false;
+    Object.keys(st.c).forEach(function (k) {
+      if (k.indexOf(st.ver + ':') === 0) delete st.c[k];
+    });
+    save();
+    renderAll();
+  });
+
+  renderAll();
+})();
+</script>
+
+</body></html>
